@@ -1,7 +1,0 @@
-{
-  "stats": [
-    { "label": "Sales", "value": "$48.2K", "delta": "+1.9K", "trend": "+18.2%", "tone": "blue" },
-    { "label": "Conversion", "value": "6.84%", "delta": "+0.8%", "trend": "+12.4%", "tone": "purple" },
-    { "label": "Visitors", "value": "14.8K", "delta": "-420", "trend": "-3.1%", "tone": "green" }
-  ]
-}
