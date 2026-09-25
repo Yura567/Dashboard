@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Button, CardContent } from '@mui/material'
 import { Intro, PageLink, PageLinkArrow, PageLinkNumber, WorkspaceCard, WorkspaceRoot } from '../styled/WorkspacePage.styles.js'
 import { PanelHeader, SectionLabel, SectionTitle } from '../styled/OverviewPage.styles.js'
@@ -12,8 +13,12 @@ const pageContent = {
 
 export default function WorkspacePage({ pageKey }) {
   const [eyebrow, title, description, items] = pageContent[pageKey]
+  const [workspaceItems, setWorkspaceItems] = useState(items)
+  const [selectedItem, setSelectedItem] = useState('')
+  const createItem = () => setWorkspaceItems((currentItems) => [...currentItems, `New ${eyebrow.toLowerCase()} item`])
+
   return <WorkspaceRoot>
     <Intro><SectionLabel>{eyebrow}</SectionLabel><h3>{title}</h3><p>{description}</p></Intro>
-    <WorkspaceCard><CardContent><PanelHeader><div><SectionLabel>Workspace tools</SectionLabel><SectionTitle>Manage {eyebrow.toLowerCase()}</SectionTitle></div><Button variant="contained">Create new</Button></PanelHeader>{items.map((item, index) => <PageLink type="button" key={item}><PageLinkNumber>0{index + 1}</PageLinkNumber><span>{item}</span><PageLinkArrow>→</PageLinkArrow></PageLink>)}</CardContent></WorkspaceCard>
+    <WorkspaceCard><CardContent><PanelHeader><div><SectionLabel>Workspace tools</SectionLabel><SectionTitle>Manage {eyebrow.toLowerCase()}</SectionTitle></div><Button variant="contained" onClick={createItem}>Create new</Button></PanelHeader>{workspaceItems.map((item, index) => <PageLink type="button" key={`${item}-${index}`} onClick={() => setSelectedItem(item)}><PageLinkNumber>{String(index + 1).padStart(2, '0')}</PageLinkNumber><span>{item}{selectedItem === item && ' - Opened'}</span><PageLinkArrow>→</PageLinkArrow></PageLink>)}</CardContent></WorkspaceCard>
   </WorkspaceRoot>
 }
