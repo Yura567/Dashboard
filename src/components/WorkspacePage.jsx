@@ -1,4 +1,9 @@
 import { useState } from 'react'
+import AddIcon from '@mui/icons-material/Add'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import { ItemArrow, ItemCopy, ItemNumber, WorkspaceCard, WorkspaceCardContent, WorkspaceDescription, WorkspaceEyebrow, WorkspaceHeader, WorkspaceIntro, WorkspaceItem, WorkspaceItems, WorkspaceRoot, WorkspaceTitle, CreateButton } from '../styled/WorkspacePage.js'
 
 const pageContent = {
   analytics: ['Insights', 'Analytics workspace', 'Track audience behavior and conversion performance across your workspace.', ['Sessions', 'Bounce rate', 'Avg. session']],
@@ -9,41 +14,42 @@ const pageContent = {
 }
 
 export default function WorkspacePage({ pageKey }) {
-  const [eyebrow, title, description, items] = pageContent[pageKey] ?? pageContent.analytics
-  const [workspaceItems, setWorkspaceItems] = useState(items)
+  const [eyebrow, title, description, initialItems] = pageContent[pageKey] ?? pageContent.analytics
+  const [items, setItems] = useState(initialItems)
   const [selectedItem, setSelectedItem] = useState('')
-  const createItem = () => setWorkspaceItems((currentItems) => [...currentItems, `New ${eyebrow.toLowerCase()} item`])
+  const createItem = () => setItems((currentItems) => [...currentItems, `New ${eyebrow.toLowerCase()} item`])
 
   return (
-    <section className="workspace-root">
-      <div className="workspace-intro">
-        <p className="eyebrow muted">{eyebrow}</p>
-        <h3>{title}</h3>
-        <p>{description}</p>
-      </div>
-      <article className="panel workspace-card">
-        <div className="panel-header">
-          <div>
-            <p className="eyebrow muted">Workspace tools</p>
-            <h3>Manage {eyebrow.toLowerCase()}</h3>
-          </div>
-          <button type="button" className="primary-btn" onClick={createItem}>Create new</button>
-        </div>
-        <div className="workspace-items">
-          {workspaceItems.map((item, index) => (
-            <button
-              type="button"
-              className="workspace-link"
-              key={`${item}-${index}`}
-              onClick={() => setSelectedItem(item)}
-            >
-              <span className="workspace-number">{String(index + 1).padStart(2, '0')}</span>
-              <span>{item}{selectedItem === item && <small>Opened</small>}</span>
-              <span className="workspace-arrow" aria-hidden="true">→</span>
-            </button>
-          ))}
-        </div>
-      </article>
-    </section>
+    <WorkspaceRoot>
+      <WorkspaceIntro>
+        <WorkspaceEyebrow>{eyebrow}</WorkspaceEyebrow>
+        <WorkspaceTitle>{title}</WorkspaceTitle>
+        <WorkspaceDescription>{description}</WorkspaceDescription>
+      </WorkspaceIntro>
+      <Grid container spacing={2}>
+        <Grid size={{ xs: 12, lg: 9 }}>
+          <WorkspaceCard>
+            <WorkspaceCardContent>
+              <WorkspaceHeader>
+                <div>
+                  <WorkspaceEyebrow>Workspace tools</WorkspaceEyebrow>
+                  <Typography variant="h6">Manage {eyebrow.toLowerCase()}</Typography>
+                </div>
+                <CreateButton variant="contained" startIcon={<AddIcon />} onClick={createItem}>Create new</CreateButton>
+              </WorkspaceHeader>
+              <WorkspaceItems>
+                {items.map((item, index) => (
+                  <WorkspaceItem type="button" key={`${item}-${index}`} onClick={() => setSelectedItem(item)}>
+                    <ItemNumber>{String(index + 1).padStart(2, '0')}</ItemNumber>
+                    <ItemCopy>{item}{selectedItem === item && <small>Opened</small>}</ItemCopy>
+                    <ItemArrow><ArrowForwardIcon fontSize="small" /></ItemArrow>
+                  </WorkspaceItem>
+                ))}
+              </WorkspaceItems>
+            </WorkspaceCardContent>
+          </WorkspaceCard>
+        </Grid>
+      </Grid>
+    </WorkspaceRoot>
   )
 }
