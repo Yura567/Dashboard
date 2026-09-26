@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import './App.css'
+import RevenuePanel from './components/RevenuePanel.jsx'
+import Topbar from './components/Topbar.jsx'
+import WorkspacePage from './components/WorkspacePage.jsx'
 
 const navItems = ['Overview', 'Analytics', 'Revenue', 'Orders', 'Messages', 'Settings']
 const stats = [
@@ -18,17 +21,13 @@ const rows = [
   ['David Lee', 'Enterprise', '$3,980', 'Paid'],
 ]
 const activity = ['New signup', 'Payment received', 'Campaign report']
-const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-const bars = [28,42,35,56,65,52,76,68,88,74,92,82]
-
 function App() {
+  const [activePage, setActivePage] = useState('Overview')
   const [activeAction, setActiveAction] = useState('report')
   const [tasks, setTasks] = useState(defaultTasks)
   const [showAllReports, setShowAllReports] = useState(false)
   const [isCreatingReport, setIsCreatingReport] = useState(false)
   const [reportName, setReportName] = useState('')
-  const today = new Intl.DateTimeFormat('en-US', { weekday: 'long', day: 'numeric', month: 'short' }).format(new Date())
-
   const allReports = [
     ...defaultTasks,
     { title: 'Quarterly overview', time: 'Today', color: 'purple' },
@@ -69,7 +68,12 @@ function App() {
 
         <nav className="nav">
           {navItems.map((item, i) => (
-            <button key={item} className={`nav-item ${i === 0 ? 'active' : ''}`}>
+            <button
+              type="button"
+              key={item}
+              className={`nav-item ${activePage === item ? 'active' : ''}`}
+              onClick={() => setActivePage(item)}
+            >
               <span className="icon">{['◫','◎','▣','◌','◴','⚙'][i]}</span>
               {item}
             </button>
@@ -83,23 +87,7 @@ function App() {
       </aside>
 
       <main className="main-panel">
-        <header className="topbar">
-          <div>
-            <p className="eyebrow muted">{today}</p>
-            <h2>Overview</h2>
-          </div>
-          <div className="top-actions">
-            <button className="icon-button">⌕</button>
-            <button className="icon-button">🔔</button>
-            <button
-              type="button"
-              className={`primary-btn ${activeAction === 'report' ? 'is-active' : ''}`}
-              onClick={handleAddReport}
-            >
-              + New report
-            </button>
-          </div>
-        </header>
+        <Topbar title={activePage} onNewReport={handleAddReport} isActive={activeAction === 'report'} />
 
         {isCreatingReport && (
           <form className="report-form" onSubmit={handleSubmitReport}>
@@ -117,6 +105,7 @@ function App() {
           </form>
         )}
 
+        {activePage === 'Overview' ? <>
         <section className="stats-grid">
           {stats.map((card) => (
             <article key={card.label} className={`stat-card accent-${card.tone}`}>
@@ -127,7 +116,7 @@ function App() {
               <div className="value-row">
                 <h3>{card.value}</h3>
                 <span className={`delta ${card.delta.startsWith('+') ? 'positive' : 'negative'}`}>
-                  {card.delta.startsWith('+') ? '▲' : '▼'} {card.delta.replace(/^[+\-]/, '')}
+                  {card.delta.startsWith('+') ? '▲' : '▼'} {card.delta.replace(/^[+-]/, '')}
                 </span>
               </div>
               <div className={`spark spark-${card.tone}`}><span /><span /><span /><span /><span /><span /></div>
@@ -136,30 +125,7 @@ function App() {
         </section>
 
         <section className="content-grid">
-          <article className="panel">
-            <div className="panel-header">
-              <div>
-                <p className="eyebrow muted">Performance</p>
-                <h3>Revenue overview</h3>
-              </div>
-              <div className="segmented-control">
-                <button className="segment active">Month</button>
-                <button className="segment">Quarter</button>
-                <button className="segment">Year</button>
-              </div>
-            </div>
-
-            <div className="chart-area">
-              <div className="grid-lines" />
-              <div className="bars">
-                {bars.map((h, i) => <span key={months[i]} style={{ '--h': `${h}%` }} />)}
-              </div>
-            </div>
-
-            <div className="chart-footer">
-              {months.map((m) => <span key={m}>{m}</span>)}
-            </div>
-          </article>
+          <RevenuePanel />
 
           <article className="panel">
             <div className="panel-header compact">
@@ -229,6 +195,7 @@ function App() {
             </div>
           </article>
         </section>
+        </> : <WorkspacePage key={activePage} pageKey={activePage.toLowerCase()} />}
       </main>
     </div>
   )
