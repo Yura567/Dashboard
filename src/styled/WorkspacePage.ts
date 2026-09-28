@@ -34,7 +34,7 @@ export const WorkspaceCard = styled(Card)`
   width: 100%;
   max-width: 920px;
   border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 4}px;
+  border-radius: ${({ theme }) => Number(theme.shape.borderRadius) + 4}px;
   box-shadow: none;
 `
 

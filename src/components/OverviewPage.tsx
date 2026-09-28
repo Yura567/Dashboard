@@ -1,31 +1,49 @@
 import { useState } from 'react'
-import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
+import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable, type ColumnDef, type SortingState } from '@tanstack/react-table'
 import Grid from '@mui/material/Grid'
 import TableBody from '@mui/material/TableBody'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import StatCards from './StatCards.jsx'
-import RevenuePanel from './RevenuePanel.jsx'
-import { ActivityCopy, ActivityDot, ActivityItem, ActivityList, ActivityTime, CustomerAvatar, CustomerCell, OverviewGrid, PanelCard, PanelContent, PanelEyebrow, PanelHeader, PanelTitle, PaymentStatus, SortButton, SortIndicator, TaskCopy, TaskList, TaskMarker, TaskRow, TaskTime, TaskTitle, TransactionCell, TransactionHeaderCell, TransactionTable, TransactionTableContainer, ViewAllButton } from '../styled/OverviewPage.js'
 
-const initialTasks = [
+import StatCards from './StatCards'
+import RevenuePanel from './RevenuePanel'
+
+import { ActivityCopy, ActivityDot, ActivityItem, ActivityList, ActivityTime, CustomerAvatar, CustomerCell, OverviewGrid, PanelCard, PanelContent, PanelEyebrow, PanelHeader, PanelTitle, PaymentStatus, SortButton, SortIndicator, TaskCopy, TaskList, TaskMarker, TaskRow, TaskTime, TaskTitle, TransactionCell, TransactionHeaderCell, TransactionTable, TransactionTableContainer, ViewAllButton } from '../styled/OverviewPage'
+
+type TaskTone = 'primary' | 'secondary' | 'success'
+
+interface Task {
+  title: string
+  time: string
+  color: TaskTone
+}
+
+const initialTasks: Task[] = [
   { title: 'Design review', time: '09:30 AM', color: 'primary' },
   { title: 'Marketing sync', time: '11:00 AM', color: 'secondary' },
   { title: 'Campaign launch', time: '02:00 PM', color: 'success' },
 ]
-const allTasks = [
+const allTasks: Task[] = [
   ...initialTasks,
   { title: 'Quarterly overview', time: 'Today', color: 'secondary' },
   { title: 'Customer retention', time: 'Yesterday', color: 'success' },
   { title: 'Regional sales', time: '2 days ago', color: 'primary' },
   { title: 'Campaign analytics', time: '3 days ago', color: 'secondary' },
 ]
-const transactions = [
+interface Transaction {
+  customer: string
+  plan: string
+  amount: number
+  status: 'Paid' | 'Pending'
+  avatarTone: 'amber' | 'blue' | 'pink'
+}
+
+const transactions: Transaction[] = [
   { customer: 'Mark Johnson', plan: 'Pro', amount: 1240, status: 'Paid', avatarTone: 'amber' },
   { customer: 'Alicia Smith', plan: 'Basic', amount: 480, status: 'Pending', avatarTone: 'blue' },
   { customer: 'David Lee', plan: 'Enterprise', amount: 3980, status: 'Paid', avatarTone: 'pink' },
 ]
-const transactionColumns = [
+const transactionColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: 'customer',
     header: 'Customer',
@@ -37,14 +55,14 @@ const transactionColumns = [
     ),
   },
   { accessorKey: 'plan', header: 'Plan' },
-  { accessorKey: 'amount', header: 'Amount', cell: ({ getValue }) => `$${getValue().toLocaleString('en-US')}` },
+  { accessorKey: 'amount', header: 'Amount', cell: ({ getValue }) => `$${getValue<number>().toLocaleString('en-US')}` },
   {
     accessorKey: 'status',
     header: 'Status',
-    cell: ({ getValue }) => <PaymentStatus label={getValue()} $paid={getValue() === 'Paid'} size="small" />,
+    cell: (context) => <PaymentStatus label={context.getValue<Transaction['status']>()} $paid={context.getValue<Transaction['status']>() === 'Paid'} size="small" />,
   },
 ]
-const activity = [
+const activity: { title: string; time: string; color: TaskTone }[] = [
   { title: 'New signup', time: '12 minutes ago', color: 'primary' },
   { title: 'Payment received', time: '1 hour ago', color: 'secondary' },
   { title: 'Campaign report', time: 'Yesterday', color: 'success' },
@@ -52,7 +70,7 @@ const activity = [
 
 export default function OverviewPage() {
   const [showAllTasks, setShowAllTasks] = useState(false)
-  const [sorting, setSorting] = useState([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const table = useReactTable({
     data: transactions,
     columns: transactionColumns,

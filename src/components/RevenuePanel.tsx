@@ -1,12 +1,14 @@
 import { useState } from 'react'
-import { Bars, Bar, ChartArea, ChartFooter, GridLines, PeriodButton, PeriodGroup, RevenueCard, RevenueContent, RevenueEyebrow, RevenueHeader, RevenueTitle } from '../styled/RevenuePanel.js'
+
+import { Bars, Bar, ChartArea, ChartFooter, GridLines, PeriodButton, PeriodGroup, RevenueCard, RevenueContent, RevenueEyebrow, RevenueHeader, RevenueTitle } from '../styled/RevenuePanel'
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const barHeights = [28, 42, 35, 56, 65, 52, 76, 68, 88, 74, 92, 82]
-const periods = ['Month', 'Quarter', 'Year']
+const periods = ['Month', 'Quarter', 'Year'] as const
+type RevenuePeriod = (typeof periods)[number]
 
 export default function RevenuePanel() {
-  const [period, setPeriod] = useState('Month')
+  const [period, setPeriod] = useState<RevenuePeriod>('Month')
 
   return (
     <RevenueCard>
@@ -21,7 +23,7 @@ export default function RevenuePanel() {
             size="small"
             value={period}
             aria-label="Revenue period"
-            onChange={(_, value) => value && setPeriod(value)}
+            onChange={(_, value: RevenuePeriod | null) => value && setPeriod(value)}
           >
             {periods.map((item) => <PeriodButton key={item} value={item} aria-label={item}>{item}</PeriodButton>)}
           </PeriodGroup>

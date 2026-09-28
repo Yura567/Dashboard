@@ -70,7 +70,7 @@ export const NotificationMenu = styled.div`
 export const SearchDialog = styled(Dialog)`
   & .MuiDialog-paper {
     width: 100%;
-    border-radius: ${({ theme }) => theme.shape.borderRadius + 4}px;
+    border-radius: ${({ theme }) => Number(theme.shape.borderRadius) + 4}px;
   }
 `
 

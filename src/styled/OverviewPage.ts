@@ -5,21 +5,21 @@ import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Chip from '@mui/material/Chip'
-import Grid from '@mui/material/Grid'
+import Grid, { type GridProps } from '@mui/material/Grid'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import Table from '@mui/material/Table'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 
-export const OverviewGrid = styled(Grid)`
+export const OverviewGrid = styled(Grid)<GridProps>`
   width: 100%;
 `
 
 export const PanelCard = styled(Card)`
   height: 100%;
   border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 4}px;
+  border-radius: ${({ theme }) => Number(theme.shape.borderRadius) + 4}px;
   box-shadow: none;
 `
 
@@ -72,11 +72,11 @@ export const TaskList = styled(List)`
 export const TaskRow = styled(ListItemButton)`
   gap: ${({ theme }) => theme.spacing(1.5)};
   padding: ${({ theme }) => theme.spacing(1.25, 1)};
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 2}px;
+  border-radius: ${({ theme }) => Number(theme.shape.borderRadius) + 2}px;
   background: ${({ theme }) => theme.dashboard.mutedSurface};
 `
 
-export const TaskMarker = styled.span`
+export const TaskMarker = styled.span<{ $tone: 'primary' | 'secondary' | 'success' }>`
   width: 10px;
   height: 10px;
   flex: 0 0 auto;
@@ -145,7 +145,7 @@ export const CustomerCell = styled(Box)`
   gap: ${({ theme }) => theme.spacing(1.25)};
 `
 
-export const CustomerAvatar = styled(Avatar)`
+export const CustomerAvatar = styled(Avatar)<{ $tone: 'amber' | 'blue' | 'pink' }>`
   width: 28px;
   height: 28px;
   color: ${({ theme }) => theme.palette.common.white};
@@ -154,7 +154,7 @@ export const CustomerAvatar = styled(Avatar)`
   font-weight: 700;
 `
 
-export const PaymentStatus = styled(Chip)`
+export const PaymentStatus = styled(Chip)<{ $paid: boolean }>`
   height: auto;
   border-radius: 999px;
   color: ${({ theme, $paid }) => $paid ? theme.dashboard.successText : theme.dashboard.warningText};
@@ -177,11 +177,11 @@ export const ActivityItem = styled(Box)`
   align-items: center;
   gap: ${({ theme }) => theme.spacing(1.5)};
   padding: ${({ theme }) => theme.spacing(1.25, 1)};
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 2}px;
+  border-radius: ${({ theme }) => Number(theme.shape.borderRadius) + 2}px;
   background: ${({ theme }) => theme.dashboard.activityBackground};
 `
 
-export const ActivityDot = styled.span`
+export const ActivityDot = styled.span<{ $tone: 'primary' | 'secondary' | 'success' }>`
   width: 10px;
   height: 10px;
   flex: 0 0 auto;
