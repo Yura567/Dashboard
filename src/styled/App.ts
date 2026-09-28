@@ -1,15 +1,15 @@
 import styled from 'styled-components'
 import Button from '@mui/material/Button'
-import Grid from '@mui/material/Grid'
+import Grid, { type GridProps } from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import { Link } from 'react-router-dom'
 
-export const AppShell = styled(Grid)`
+export const AppShell = styled(Grid)<GridProps>`
   min-height: 100vh;
   background: ${({ theme }) => theme.palette.background.default};
 `
 
-export const SidebarColumn = styled(Grid)`
+export const SidebarColumn = styled(Grid)<GridProps>`
   min-width: 0;
   padding: ${({ theme }) => theme.spacing(3, 2)};
   color: ${({ theme }) => theme.dashboard.sidebarText};
@@ -35,7 +35,7 @@ export const BrandMark = styled.div`
   aspect-ratio: 1;
   display: grid;
   place-items: center;
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 2}px;
+  border-radius: ${({ theme }) => Number(theme.shape.borderRadius) + 2}px;
   color: ${({ theme }) => theme.palette.common.white};
   background: ${({ theme }) => theme.dashboard.brandGradient};
   font-weight: 700;
@@ -72,7 +72,7 @@ export const SidebarNav = styled.nav`
   }
 `
 
-export const NavItem = styled(Link)`
+export const NavItem = styled(Link)<{ $active: boolean }>`
   min-width: 0;
   display: flex;
   align-items: center;
@@ -103,7 +103,7 @@ export const Profile = styled.div`
   margin-top: auto;
   padding: ${({ theme }) => theme.spacing(1.25, 1.5)};
   border: 1px solid ${({ theme }) => theme.dashboard.sidebarBorder};
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 2}px;
+  border-radius: ${({ theme }) => Number(theme.shape.borderRadius) + 2}px;
   background: ${({ theme }) => theme.dashboard.sidebarSurface};
 `
 
@@ -127,7 +127,7 @@ export const ProfileCopy = styled.div`
   }
 `
 
-export const MainColumn = styled(Grid)`
+export const MainColumn = styled(Grid)<GridProps>`
   min-width: 0;
   padding: ${({ theme }) => theme.spacing(3, 2.75, 2)};
 
@@ -147,7 +147,7 @@ export const ReportForm = styled.form`
   margin-bottom: ${({ theme }) => theme.spacing(2)};
   padding: ${({ theme }) => theme.spacing(1.5)};
   border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 2}px;
+  border-radius: ${({ theme }) => Number(theme.shape.borderRadius) + 2}px;
   background: ${({ theme }) => theme.palette.background.paper};
 
   @media ${({ theme }) => theme.breakpoints.down('sm')} {

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Field, Form as FormikForm, Formik } from 'formik'
+import { Field, Formik, type FieldProps } from 'formik'
 import AddIcon from '@mui/icons-material/Add'
 import DashboardIcon from '@mui/icons-material/DashboardOutlined'
 import InsightsIcon from '@mui/icons-material/InsightsOutlined'
@@ -10,13 +10,17 @@ import WalletIcon from '@mui/icons-material/AccountBalanceWalletOutlined'
 import Button from '@mui/material/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import OverviewPage from './OverviewPage.jsx'
-import Topbar from './Topbar.jsx'
-import WorkspacePage from './WorkspacePage.jsx'
-import { clearReportError, createReportRequested } from '../store/ducks/reports.js'
-import { AppShell, Brand, BrandCopy, BrandEyebrow, BrandMark, BrandTitle, MainColumn, NavIcon, NavItem, Profile, ProfileAvatar, ProfileCopy, ReportError, ReportField, ReportForm, ReportFormButton, SidebarColumn, SidebarNav } from '../styled/App.js'
+import type { SvgIconComponent } from '@mui/icons-material'
 
-const navItems = [
+import OverviewPage from './OverviewPage'
+import Topbar from './Topbar'
+import WorkspacePage from './WorkspacePage'
+
+import { clearReportError, createReportRequested } from '../store/ducks/reports'
+import { type AppDispatch, type RootState } from '../store'
+import { AppShell, Brand, BrandCopy, BrandEyebrow, BrandMark, BrandTitle, MainColumn, NavIcon, NavItem, Profile, ProfileAvatar, ProfileCopy, ReportError, ReportField, ReportForm, ReportFormButton, SidebarColumn, SidebarNav } from '../styled/App'
+
+const navItems: { label: string; path: string; Icon: SvgIconComponent }[] = [
 	{ label: 'Overview', path: '/', Icon: DashboardIcon },
 	{ label: 'Analytics', path: '/analytics', Icon: InsightsIcon },
 	{ label: 'Revenue', path: '/revenue', Icon: WalletIcon },
@@ -28,8 +32,8 @@ const navItems = [
 export default function App() {
 	const { pathname } = useLocation()
 	const activePage = navItems.find((item) => item.path === pathname)?.label ?? 'Overview'
-	const dispatch = useDispatch()
-	const { status: reportStatus, error: reportError } = useSelector((state) => state.reports)
+	const dispatch = useDispatch<AppDispatch>()
+	const { status: reportStatus, error: reportError } = useSelector((state: RootState) => state.reports)
 	const [activeAction, setActiveAction] = useState('report')
 	const [isCreatingReport, setIsCreatingReport] = useState(false)
 
@@ -78,10 +82,10 @@ export default function App() {
 							setActiveAction('report')
 						}}
 					>
-						{({ dirty, isValid }) => (
-							<FormikForm as={ReportForm} noValidate>
+						{({ dirty, isValid, handleSubmit }) => (
+							<ReportForm onSubmit={handleSubmit} noValidate>
 								<Field name="title">
-									{({ field, meta }) => (
+									{({ field, meta }: FieldProps<string, { title: string }>) => (
 										<ReportField
 											{...field}
 											autoFocus
@@ -106,7 +110,7 @@ export default function App() {
 								<Button type="button" disabled={reportStatus === 'loading'} onClick={() => setIsCreatingReport(false)}>
 									Cancel
 								</Button>
-							</FormikForm>
+							</ReportForm>
 						)}
 					</Formik>
 				)}

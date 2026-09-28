@@ -1,16 +1,16 @@
 import styled from 'styled-components'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Grid from '@mui/material/Grid'
+import Grid, { type GridProps } from '@mui/material/Grid'
 
-export const StatsGrid = styled(Grid)`
+export const StatsGrid = styled(Grid)<GridProps>`
   margin-bottom: ${({ theme }) => theme.spacing(2)};
 `
 
 export const StatCard = styled(Card)`
   height: 100%;
   border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 4}px;
+  border-radius: ${({ theme }) => Number(theme.shape.borderRadius) + 4}px;
   box-shadow: none;
 `
 
@@ -35,7 +35,7 @@ export const StatLabel = styled.span`
   font-weight: 600;
 `
 
-export const Trend = styled.span`
+export const Trend = styled.span<{ $positive: boolean }>`
   padding: ${({ theme }) => theme.spacing(0.5, 0.875)};
   border-radius: 999px;
   color: ${({ theme, $positive }) => $positive ? theme.palette.success.dark : theme.dashboard.errorText};
@@ -58,7 +58,7 @@ export const StatValue = styled.h3`
   font-size: 1.85rem;
 `
 
-export const Delta = styled.span`
+export const Delta = styled.span<{ $positive: boolean }>`
   color: ${({ theme, $positive }) => $positive ? theme.palette.success.dark : theme.dashboard.errorText};
   font-size: 0.72rem;
   font-weight: 700;
@@ -71,7 +71,7 @@ export const Sparkline = styled.div`
   gap: ${({ theme }) => theme.spacing(0.625)};
 `
 
-export const SparklineBar = styled.span`
+export const SparklineBar = styled.span<{ $height: string; $tone: 'primary' | 'secondary' | 'success' }>`
   width: 10px;
   height: ${({ $height }) => $height};
   border-radius: ${({ theme }) => theme.shape.borderRadius}px ${({ theme }) => theme.shape.borderRadius}px 0 0;

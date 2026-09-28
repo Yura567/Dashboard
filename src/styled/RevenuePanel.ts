@@ -7,7 +7,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 export const RevenueCard = styled(Card)`
   height: 100%;
   border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 4}px;
+  border-radius: ${({ theme }) => Number(theme.shape.borderRadius) + 4}px;
   box-shadow: none;
 `
 
@@ -54,7 +54,7 @@ export const PeriodGroup = styled(ToggleButtonGroup)`
   & .MuiToggleButtonGroup-grouped {
     margin: 0;
     border: 0;
-    border-radius: ${({ theme }) => theme.shape.borderRadius - 2}px;
+    border-radius: ${({ theme }) => Number(theme.shape.borderRadius) - 2}px;
     color: ${({ theme }) => theme.palette.text.secondary};
     font-size: 0.75rem;
     padding: ${({ theme }) => theme.spacing(0.75, 1.25)};
@@ -72,7 +72,7 @@ export const ChartArea = styled.div`
   position: relative;
   height: 260px;
   overflow: hidden;
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 2}px;
+  border-radius: ${({ theme }) => Number(theme.shape.borderRadius) + 2}px;
   background: ${({ theme }) => theme.dashboard.chartSurface};
 
   @media ${({ theme }) => theme.breakpoints.down('sm')} {
@@ -96,10 +96,10 @@ export const Bars = styled.div`
   gap: ${({ theme }) => theme.spacing(1)};
 `
 
-export const Bar = styled.span`
+export const Bar = styled.span<{ $height: number }>`
   flex: 1;
   height: ${({ $height }) => $height}%;
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 2}px ${({ theme }) => theme.shape.borderRadius + 2}px 0 0;
+  border-radius: ${({ theme }) => Number(theme.shape.borderRadius) + 2}px ${({ theme }) => Number(theme.shape.borderRadius) + 2}px 0 0;
   background: ${({ theme }) => theme.dashboard.revenueGradient};
 `
 

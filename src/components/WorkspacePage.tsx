@@ -3,9 +3,12 @@ import AddIcon from '@mui/icons-material/Add'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import { ItemArrow, ItemCopy, ItemNumber, WorkspaceCard, WorkspaceCardContent, WorkspaceDescription, WorkspaceEyebrow, WorkspaceHeader, WorkspaceIntro, WorkspaceItem, WorkspaceItems, WorkspaceRoot, WorkspaceTitle, CreateButton } from '../styled/WorkspacePage.js'
 
-const pageContent = {
+import { ItemArrow, ItemCopy, ItemNumber, WorkspaceCard, WorkspaceCardContent, WorkspaceDescription, WorkspaceEyebrow, WorkspaceHeader, WorkspaceIntro, WorkspaceItem, WorkspaceItems, WorkspaceRoot, WorkspaceTitle, CreateButton } from '../styled/WorkspacePage'
+
+export type WorkspacePageKey = 'analytics' | 'revenue' | 'orders' | 'messages' | 'settings'
+
+const pageContent: Record<WorkspacePageKey, [eyebrow: string, title: string, description: string, items: string[]]> = {
   analytics: ['Insights', 'Analytics workspace', 'Track audience behavior and conversion performance across your workspace.', ['Sessions', 'Bounce rate', 'Avg. session']],
   revenue: ['Finance', 'Revenue center', 'Review recurring revenue, invoices, and the latest payment performance.', ['Monthly recurring revenue', 'Invoices', 'Payout schedule']],
   orders: ['Commerce', 'Orders workspace', 'Manage recent orders and keep fulfilment moving across every channel.', ['Order queue', 'Fulfilment status', 'Returns and exchanges']],
@@ -13,7 +16,7 @@ const pageContent = {
   settings: ['Workspace', 'Settings', 'Configure your workspace preferences, team access, and notification rules.', ['Workspace profile', 'Team permissions', 'Notifications']],
 }
 
-export default function WorkspacePage({ pageKey }) {
+export default function WorkspacePage({ pageKey }: { pageKey: WorkspacePageKey }) {
   const [eyebrow, title, description, initialItems] = pageContent[pageKey] ?? pageContent.analytics
   const [items, setItems] = useState(initialItems)
   const [selectedItem, setSelectedItem] = useState('')

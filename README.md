@@ -9,6 +9,9 @@ npm install
 npm run dev
 ```
 
+Run `npm run typecheck` to check the TypeScript source without emitting files.
+Run `npm test` to run the React Testing Library component tests and snapshots.
+
 Vite prints the local URL when the development server starts.
 
 To use a real reports API, set `VITE_REPORTS_API_URL` in `.env`. If unset, report requests use JSONPlaceholder, which does not persist data.

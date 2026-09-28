@@ -1,7 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { call, put, takeLatest, type CallEffect, type PutEffect } from 'redux-saga/effects'
+import type { SagaIterator } from 'redux-saga'
 
-const initialState = {
+export interface ReportItem {
+  title: string
+  time: string
+  color: 'blue' | 'purple' | 'green'
+  id?: number
+}
+
+interface ReportsState {
+  items: ReportItem[]
+  status: 'idle' | 'loading' | 'succeeded' | 'failed'
+  error: string | null
+}
+
+interface ReportResponse {
+  id: number
+  title?: string
+}
+
+const initialState: ReportsState = {
   items: [
     { title: 'Design review', time: '09:30 AM', color: 'blue' },
     { title: 'Marketing sync', time: '11:00 AM', color: 'purple' },
@@ -15,11 +34,11 @@ const reportsSlice = createSlice({
   name: 'dashboard/reports',
   initialState,
   reducers: {
-    createReportRequested(state) {
+    createReportRequested(state, _action: PayloadAction<{ title: string }>) {
       state.status = 'loading'
       state.error = null
     },
-    createReportSucceeded(state, action) {
+    createReportSucceeded(state, action: PayloadAction<{ id: number; title: string }>) {
       state.items.unshift({
         title: action.payload.title,
         time: 'Just now',
@@ -28,7 +47,7 @@ const reportsSlice = createSlice({
       })
       state.status = 'succeeded'
     },
-    createReportFailed(state, action) {
+    createReportFailed(state, action: PayloadAction<string>) {
       state.status = 'failed'
       state.error = action.payload
     },
@@ -48,7 +67,7 @@ export const {
 
 const reportsApiUrl = import.meta.env.VITE_REPORTS_API_URL || 'https://jsonplaceholder.typicode.com/posts'
 
-async function postReport(title) {
+async function postReport(title: string): Promise<ReportResponse> {
   const response = await fetch(reportsApiUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -59,10 +78,16 @@ async function postReport(title) {
     throw new Error(`Request failed with status ${response.status}`)
   }
 
-  return response.json()
+  return response.json() as Promise<ReportResponse>
 }
 
-function* createReportWorker(action) {
+function* createReportWorker(
+  action: PayloadAction<{ title: string }>,
+): Generator<
+  CallEffect<ReportResponse> | PutEffect<PayloadAction<{ id: number; title: string }>> | PutEffect<PayloadAction<string>>,
+  void,
+  ReportResponse
+> {
   try {
     const report = yield call(postReport, action.payload.title)
     yield put(createReportSucceeded({ id: report.id, title: report.title || action.payload.title }))
@@ -71,7 +96,7 @@ function* createReportWorker(action) {
   }
 }
 
-export function* reportsSaga() {
+export function* reportsSaga(): SagaIterator {
   yield takeLatest(createReportRequested.type, createReportWorker)
 }
 
